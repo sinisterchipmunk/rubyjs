@@ -1,0 +1,1 @@
+var EmptyClass = Class.create({ });

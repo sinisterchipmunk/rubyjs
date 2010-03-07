@@ -1,0 +1,14 @@
+History.txt
+Manifest.txt
+PostInstall.txt
+README.rdoc
+Rakefile
+lib/rubyjs.rb
+script/console
+script/console.cmd
+script/destroy
+script/destroy.cmd
+script/generate
+script/generate.cmd
+test/test_helper.rb
+test/test_rubyjs.rb
