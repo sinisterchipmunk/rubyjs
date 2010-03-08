@@ -5,6 +5,9 @@ class RubyJS::Translator::SexpProcessor
   include RubyJS::Testing::Assertions
   
   def initialize(sexp, parent = nil)
+    if sexp.kind_of?(String) && sexp.length != 0
+      sexp = RubyParser.new.parse(sexp).to_a
+    end
     @parent = parent
     @sexp = sexp
     @params = {}
@@ -99,11 +102,12 @@ class RubyJS::Translator::SexpProcessor
   def javascript_for_masgn
     sexp = exactly_one(Array)
     assert_equal :array, sexp.shift
-    sexp.collect do |element|
+    r = sexp.collect do |element|
       assert_equal :lasgn, element.first
       assert_length 2, element
       javascript_name_for element.last
-    end.join(", ")
+    end
+    r.join(", ")
   end
 
   # This method can be called under 2 conditions: An assignment, such as left = right; or, in a more misleading
@@ -189,7 +193,9 @@ class RubyJS::Translator::SexpProcessor
 
   def javascript_for_class
     pull(:klass, :superclass, :body)
-    "var #{klass} = Class.create(#{superclass ? subprocess(superclass)+", " : ''}#{subprocess body});"
+    @class_name = klass
+    @superclass_name = superclass ? subprocess(superclass) : nil
+    "var #{@class_name} = Class.create(#{@superclass_name ? @superclass_name+", " : ''}#{subprocess body});"
   end
 
   def javascript_for_const
@@ -254,7 +260,7 @@ class RubyJS::Translator::SexpProcessor
       when ?@ # instance or class variable
         case rubyvarname[1]
           when ?@ # class variable
-            rubyvarname[2..-1].depunctuate
+            "#{class_name || "document"}.#{rubyvarname[2..-1].depunctuate}"
           else    # instance variable
             "this."+rubyvarname[1..-1].depunctuate
         end
@@ -265,15 +271,21 @@ class RubyJS::Translator::SexpProcessor
     end
   end
 
-  def root
+  def root(keyword = nil)
     p = self
-    p = p.parent while p.parent
+    p = p.parent while p.parent && p.keyword != keyword
     p
   end
 
   def scope
-    p = self
-    p = p.parent while p.parent && p.keyword != :block
-    p
+    root(:block)
+  end
+
+  def class_name
+    return root(:class).instance_variable_get("@class_name")
+  end
+
+  def superclass_name
+    return root(:class).instance_variable_get("@superclass_name")
   end
 end

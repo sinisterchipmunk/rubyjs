@@ -6,7 +6,7 @@ class RubyJS::Translator
 
   def initialize(klass_or_filename)
     klass = klass_from_klass_or_filename(klass_or_filename)
-    @sexp = self.class.lookup(klass)
+    @sexp = self.class.lookup(klass).deep_dup
   end
 
   def to_s

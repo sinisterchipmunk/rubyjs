@@ -35,6 +35,35 @@ describe RubyJS::Translator::SexpProcessor do
     process(code).should == 'var T = Class.create({ test_the_truth: function() { assert(true) } });'
   end
 
+  context "private methods" do
+    before(:each) do
+      @processor = RubyJS::Translator::SexpProcessor.new('class EmptyClass < Superclass; end')
+      @processor.to_javascript
+    end
+    
+    it "translates class variables" do
+      @processor.send(:javascript_name_for, '@@class_var').should == 'EmptyClass.class_var'
+    end
+
+    it "translates instance variables" do
+      @processor.send(:javascript_name_for, '@instance_var').should == 'this.instance_var'
+    end
+
+    it "finds superclass name" do
+      @processor.send(:superclass_name).should == 'Superclass'
+    end
+  end
+
+  it "constructs method arguments" do
+    @processor = RubyJS::Translator::SexpProcessor.new([:masgn, [:array, [:lasgn, :a], [:lasgn, :b]]])
+    @processor.to_javascript.should == 'a, b'
+  end
+
+  it "constructs variable assignment" do
+    @processor = RubyJS::Translator::SexpProcessor.new [:lasgn, :a, [:lvar, :b]]
+    @processor.to_javascript.should == 'a = b'
+  end
+
   it "call" do
     p = RubyJS::Translator::SexpProcessor.new([:call,
                                                    [:colon2, [:const, :Javascript], :Translator],
