@@ -7,7 +7,11 @@ describe RubyJS::Javascript::Helpers do
     js_call(:alert, 'Hi, #{name}!').should == 'alert("Hi, "+name+"!")'
   end
 
-  it "produces valid string concatenation" do
-    js_concat('Hi, #{name}!').should == '"Hi, "+name+"!"'
+  context "#js_concat" do
+    context "with string argument" do
+      it "produces valid string concatenation" do
+        js_concat('Hi, #{name}!').should == '"Hi, "+name+"!"'
+      end
+    end
   end
 end

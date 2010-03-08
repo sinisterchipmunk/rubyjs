@@ -26,6 +26,12 @@ class RubyJS::Translator
 
   class << self
     public
+    # Attach adapters to perform translation from S-expressions into target language.
+    # See +RubyJS::Translator::Adapter+ for details.
+    def attach(adapter)
+      RubyJS::Translator::SexpProcessor.attach_adapter(adapter)
+    end
+
     def load
       load! unless loaded?
     end

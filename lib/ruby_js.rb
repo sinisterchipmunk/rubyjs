@@ -45,4 +45,5 @@ end
 
 ActionView::Helpers::AssetTagHelper::register_javascript_include_default "javascript_models"
 ActionView::Base.send(:include, RubyJS::JavascriptModels)
+RubyJS::Translator.attach RubyJS::Translator::Adapters::Javascript
 #Javascript::Translator.load_file(File.join(RubyJS.path, "../../ruby_js/classes"), "model_wrapper.rb")

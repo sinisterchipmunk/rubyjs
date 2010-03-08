@@ -11,11 +11,7 @@ module RubyJS::Javascript::Helpers
   end
 
   def js_concat(string)
-    string = string.inspect
-    if string.kind_of?(String)
-      string.gsub(/\\\#\{([^\}]+)\}/m) { |match| "\"+#{$~[1]}+\"" }
-    else
-      string
-    end
+    # 'hi, #{name}!' => '"hi, "+name+"!"'
+    string.inspect.gsub(/\\\#\{([^\}]+)\}/m) { |match| "\"+#{$~[1]}+\"" }
   end
 end
