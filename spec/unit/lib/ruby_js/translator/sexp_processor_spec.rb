@@ -1,41 +1,41 @@
-require 'test_helper'
+require 'spec_helper'
 
-class RubyJS::Translator::SexpProcessorTest < ActiveSupport::TestCase
+describe RubyJS::Translator::SexpProcessor do
   def process(code)
     RubyJS::Translator::SexpProcessor.new(RubyParser.new.parse(code).to_a).to_javascript
   end
 
-  test "produces an empty ruby_js class" do
-    p = RubyJS::Translator::SexpProcessor.new([:class, :EmptyClass, nil, [:scope]])
-    assert_equal "var EmptyClass = Class.create({ });", p.to_javascript
+  it "produces an empty ruby_js class" do
+    code = "class EmptyClass; end"
+    process(code).should == "var EmptyClass = Class.create({ });"
   end
 
-  test "simple call" do
+  it "simple call" do
     code = "callmethod"
-    assert_equal "callmethod()", process(code)
+    process(code).should == "callmethod()"
   end
 
-  test "2 simple calls" do
+  it "2 simple calls" do
     code = "callmethod1; callmethod2"
-    assert_equal "callmethod1(); callmethod2();", process(code)
+    process(code).should == "callmethod1(); callmethod2();"
   end
 
-  test "call with block" do
+  it "call with block" do
     code = "callmethod 'description' do\nend"
-    assert_equal 'callmethod("description", function() { })', process(code)
+    process(code).should == 'callmethod("description", function() { })'
   end
 
-  test "instantiate a class" do
+  it "instantiate a class" do
     code = "Class.new"
-    assert_equal 'new Class()', process(code)
+    process(code).should == 'new Class()'
   end
 
-  test "a unit test" do
+  it "a unit test" do
     code = "class T; test 'the truth' do; assert true; end; end"
-    assert_equal 'var T = Class.create({ test_the_truth: function() { assert(true) } });', process(code)
+    process(code).should == 'var T = Class.create({ test_the_truth: function() { assert(true) } });'
   end
 
-  test "call" do
+  it "call" do
     p = RubyJS::Translator::SexpProcessor.new([:call,
                                                    [:colon2, [:const, :Javascript], :Translator],
                                                    :load_file,
@@ -49,11 +49,11 @@ class RubyJS::Translator::SexpProcessorTest < ActiveSupport::TestCase
                                                     ]],
                                                     [:str, "empty_class.rb"]
                                                   ]])
-    assert_equal 'Javascript.Translator.load_file(File.join(document.JAVASCRIPT_MODELS_PATH, "test/support/mock"), "empty_class.rb")',
-                 p.to_javascript
+    p.to_javascript.should ==
+            'Javascript.Translator.load_file(File.join(document.JAVASCRIPT_MODELS_PATH, "test/support/mock"), "empty_class.rb")'
   end
 
-  test "arglist containing a call" do
+  it "arglist containing a call" do
     p = RubyJS::Translator::SexpProcessor.new [:arglist,
                                                     [:call,
                                                      [:const, :File],
@@ -64,10 +64,10 @@ class RubyJS::Translator::SexpProcessorTest < ActiveSupport::TestCase
                                                     ]],
                                                     [:str, "empty_class.rb"]
                                                   ]
-    assert_equal '(File.join(document.JAVASCRIPT_MODELS_PATH, "test/support/mock"), "empty_class.rb")', p.to_javascript
+    p.to_javascript.should == '(File.join(document.JAVASCRIPT_MODELS_PATH, "test/support/mock"), "empty_class.rb")'
   end
 
-  test "call class method with 1 argument" do
+  it "call class method with 1 argument" do
     p = RubyJS::Translator::SexpProcessor.new [:call,
                                                    [:const, :File],
                                                    :join,
@@ -75,10 +75,10 @@ class RubyJS::Translator::SexpProcessorTest < ActiveSupport::TestCase
                                                     [:gvar, :$JAVASCRIPT_MODELS_PATH],
                                                     [:str, "test/support/mock"]
                                                   ]]
-    assert_equal 'File.join(document.JAVASCRIPT_MODELS_PATH, "test/support/mock")', p.to_javascript
+    p.to_javascript.should == 'File.join(document.JAVASCRIPT_MODELS_PATH, "test/support/mock")'
   end
 
-  test "produces a ruby_js class with one function call in one function" do
+  it "produces a ruby_js class with one function call in one function" do
     p = RubyJS::Translator::SexpProcessor.new([:class, :MyKlass, nil,
                                                    [:scope,
                                                     [:defn, :say_hello, [:args], [:scope,
@@ -86,11 +86,10 @@ class RubyJS::Translator::SexpProcessorTest < ActiveSupport::TestCase
                                                        [:call, nil, :puts,
                                                         [:arglist, [:str, "hi"]
                                                   ]]]]]]])
-    assert_equal 'var MyKlass = Class.create({ "say_hello": function($super) { puts("hi"); } });',
-                 p.to_javascript
+    p.to_javascript.should == 'var MyKlass = Class.create({ "say_hello": function($super) { puts("hi"); } });'
   end
 
-  test "produces a ruby_js class with two function calls in one function" do
+  it "produces a ruby_js class with two function calls in one function" do
     p = RubyJS::Translator::SexpProcessor.new([:class, :MyKlass, nil,
                                                    [:scope,
                                                     [:defn, :say_hello, [:args], [:scope,
@@ -101,11 +100,11 @@ class RubyJS::Translator::SexpProcessorTest < ActiveSupport::TestCase
                                                       [:call, nil, :puts,
                                                        [:arglist, [:str, "ho"]
                                                   ]]]]]]])
-    assert_equal 'var MyKlass = Class.create({ "say_hello": function($super) { puts("hi"); puts("ho"); } });',
-                 p.to_javascript
+    p.to_javascript.should ==
+            'var MyKlass = Class.create({ "say_hello": function($super) { puts("hi"); puts("ho"); } });'
   end
 
-  test "produces a ruby_js class with one function calls in each of two functions" do
+  it "produces a ruby_js class with one function calls in each of two functions" do
     p = RubyJS::Translator::SexpProcessor.new([:class, :MyKlass, nil,
                                                    [:scope,
                                                     [:block,
@@ -122,7 +121,6 @@ class RubyJS::Translator::SexpProcessorTest < ActiveSupport::TestCase
                                                         [:call, nil, :puts,
                                                          [:arglist, [:str, "Goodbye!"]]
                                                   ]]]]]]])
-    assert_equal 'var MyKlass = Class.create({ "say_hello": function($super) { puts("Hi there!"); }, "say_goodbye": function($super) { puts("Goodbye!"); } });',
-                 p.to_javascript
+    p.to_javascript.should == 'var MyKlass = Class.create({ "say_hello": function($super) { puts("Hi there!"); }, "say_goodbye": function($super) { puts("Goodbye!"); } });'
   end
 end

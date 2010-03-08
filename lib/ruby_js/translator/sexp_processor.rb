@@ -1,6 +1,7 @@
+require_dependency 'test/unit/assertions'
+
 class RubyJS::Translator::SexpProcessor
   include Test::Unit::Assertions
-  include ActiveSupport::Testing::Assertions
   include RubyJS::Testing::Assertions
   
   def initialize(sexp, parent = nil)

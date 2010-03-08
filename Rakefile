@@ -143,6 +143,7 @@ namespace :test do
     Rcov::RcovTask.new(target) do |t|
       t.libs << 'lib'
       t.libs << "test"
+      t.rcov_opts = ['--exclude', "features,kernel,load-diff-lcs\.rb,instance_exec\.rb,lib/spec.rb,lib/spec/runner.rb,^spec/*,bin/spec,examples,/gems,/Library/Ruby,\.autotest,#{ENV['GEM_HOME']}"]
       t.test_files = FileList["test/#{target}/**/*_test.rb"]
       t.output_dir = "test/coverage/#{target}"
       t.verbose = true

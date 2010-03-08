@@ -7,7 +7,7 @@ class RubyJS::Javascript::Class
 
   def initialize(klass, superklass = nil)
     @klass = javascript_class_name(klass)
-    @superklass = javascript_class_name(superklass)
+    @superklass = superklass ? javascript_class_name(superklass) : nil
     @methods_hash = HashWithIndifferentAccess.new
   end
 
@@ -19,14 +19,16 @@ class RubyJS::Javascript::Class
     end
   end
 
-  alias to_json to_s
+  alias to_javascript to_s
 
   def define_method(name, *args, &block)
     methods_hash[name] = if @superklass
-      RubyJS::Javascript::Function.new(*args, &block)
+      nil
+      #RubyJS::Javascript::Function.new(*args, &block)
     else
       options = args.extract_options!
-      RubyJS::Javascript::Function.new(*(args + [options.merge(:super => false)]), &block)
+      nil
+      #RubyJS::Javascript::Function.new(*(args + [options.merge(:super => false)]), &block)
     end
   end
 
