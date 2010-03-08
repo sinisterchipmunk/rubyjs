@@ -62,7 +62,7 @@ class RubyJS::Translator::Adapter
     obj
   end
 
-  def object_or_type(obj)
+  def symbol_or_subprocess(obj)
     case obj
       when Array then subprocess(obj)
       when Symbol then obj.to_s

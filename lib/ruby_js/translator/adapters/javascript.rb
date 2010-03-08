@@ -115,7 +115,7 @@ class RubyJS::Translator::Adapters::Javascript < RubyJS::Translator::Adapter
 
   def javascript_for_colon2 # namespacing
     left, right = remainder
-    object_or_type(left) + "." + object_or_type(right)
+    symbol_or_subprocess(left) + "." + symbol_or_subprocess(right)
   end
 
   def javascript_for_block
