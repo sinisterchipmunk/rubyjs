@@ -2,7 +2,6 @@ require 'test_helper'
 
 class EmptyClassTest < ActiveSupport::TestCase
   def setup
-    RubyJS::Translator.load_file(File.join(RubyJS.test_path, "support/mock"), "empty_class.rb")
     RubyJS::Translator.load_file(File.join(RubyJS.test_path, "unit/mock"), "empty_class_test.rb")
     @class_translator = RubyJS::Translator(EmptyClass)
     @test_translator = RubyJS::Translator(EmptyClassTest)

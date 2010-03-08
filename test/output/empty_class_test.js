@@ -3,9 +3,6 @@ var EmptyClassTest = Class.create(ActiveSupport.TestCase,
 	{
 		"setup": function($super) {
 			RubyJS.Translator.load_file(File.join(RubyJS.test_path(),
-					"support/mock"),
-				"empty_class.rb");
-			RubyJS.Translator.load_file(File.join(RubyJS.test_path(),
 					"unit/mock"),
 				"empty_class_test.rb");
 			this.class_translator = RubyJS.Translator(EmptyClass);
