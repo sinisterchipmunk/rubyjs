@@ -2,14 +2,14 @@ require("test_helper");
 var EmptyClassTest = Class.create(ActiveSupport.TestCase,
 	{
 		"setup": function($super) {
-			Javascript.Translator.load_file(File.join(RubyJS.test_path(),
+			RubyJS.Translator.load_file(File.join(RubyJS.test_path(),
 					"support/mock"),
 				"empty_class.rb");
-			Javascript.Translator.load_file(File.join(RubyJS.test_path(),
+			RubyJS.Translator.load_file(File.join(RubyJS.test_path(),
 					"unit/mock"),
 				"empty_class_test.rb");
-			this.class_translator = Javascript.Translator(EmptyClass);
-			this.test_translator = Javascript.Translator(EmptyClassTest);
+			this.class_translator = RubyJS.Translator(EmptyClass);
+			this.test_translator = RubyJS.Translator(EmptyClassTest);
 		},
 		test_produces_a_Ruby_class: function() {
 			assert(EmptyClass.is_kind_of(Class))
@@ -36,7 +36,7 @@ var EmptyClassTest = Class.create(ActiveSupport.TestCase,
 				"w",
 				function(f,
 					b) {
-					f.puts(new Javascript.Unpacker(r))
+					f.puts(new RubyJS.Javascript.Unpacker(r))
 				});
 			puts(r);
 			puts();

@@ -1,8 +1,8 @@
 require 'test_helper'
 
-class JavascriptModelTest < ActiveSupport::TestCase
+class RubyJS::JavascriptModelTest < ActiveSupport::TestCase
   def setup
-    @jsm = JavascriptModel.new("User")
+    @jsm = RubyJS::JavascriptModel.new("User")
   end
 
   test "produces a User class" do

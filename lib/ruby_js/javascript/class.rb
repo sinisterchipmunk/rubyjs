@@ -1,5 +1,5 @@
-class Javascript::Class
-  include JavascriptModel::Helpers
+class RubyJS::Javascript::Class
+  include RubyJS::Javascript::Helpers
   
   attr_accessor :klass, :superklass
   attr_reader :methods_hash
@@ -23,18 +23,18 @@ class Javascript::Class
 
   def define_method(name, *args, &block)
     methods_hash[name] = if @superklass
-      Javascript::Function.new(*args, &block)
+      RubyJS::Javascript::Function.new(*args, &block)
     else
       options = args.extract_options!
-      Javascript::Function.new(*(args + [options.merge(:super => false)]), &block)
+      RubyJS::Javascript::Function.new(*(args + [options.merge(:super => false)]), &block)
     end
   end
 
   private
   def javascript_class_name(klass)
     case klass
-      when Class then klass.name.sub(/^Javascript\:\:Classes\:\:/, '')
-      when Javascript::Class then klass.name
+      when Class then klass.name.sub(/^RubyJS\:\:Javascript\:\:Classes\:\:/, '')
+      when RubyJS::Javascript::Class then klass.name
       else klass.to_s
     end
   end

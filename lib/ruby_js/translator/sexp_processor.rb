@@ -1,7 +1,7 @@
-class Javascript::Translator::SexpProcessor
+class RubyJS::Translator::SexpProcessor
   include Test::Unit::Assertions
   include ActiveSupport::Testing::Assertions
-  include Javascript::Assertions
+  include RubyJS::Testing::Assertions
   
   def initialize(sexp, parent = nil)
     @parent = parent
@@ -235,7 +235,7 @@ class Javascript::Translator::SexpProcessor
   end
 
   def subprocess(sexp)
-    Javascript::Translator::SexpProcessor.new(sexp, self).to_javascript
+    self.class.new(sexp, self).to_javascript
   end
 
   def pull(*keys)

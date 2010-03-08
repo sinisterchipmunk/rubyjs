@@ -1,12 +1,12 @@
 require 'test_helper'
 
-class Javascript::Translator::SexpProcessorTest < ActiveSupport::TestCase
+class RubyJS::Translator::SexpProcessorTest < ActiveSupport::TestCase
   def process(code)
-    Javascript::Translator::SexpProcessor.new(RubyParser.new.parse(code).to_a).to_javascript
+    RubyJS::Translator::SexpProcessor.new(RubyParser.new.parse(code).to_a).to_javascript
   end
 
-  test "produces an empty javascript class" do
-    p = Javascript::Translator::SexpProcessor.new([:class, :EmptyClass, nil, [:scope]])
+  test "produces an empty ruby_js class" do
+    p = RubyJS::Translator::SexpProcessor.new([:class, :EmptyClass, nil, [:scope]])
     assert_equal "var EmptyClass = Class.create({ });", p.to_javascript
   end
 
@@ -36,7 +36,7 @@ class Javascript::Translator::SexpProcessorTest < ActiveSupport::TestCase
   end
 
   test "call" do
-    p = Javascript::Translator::SexpProcessor.new([:call,
+    p = RubyJS::Translator::SexpProcessor.new([:call,
                                                    [:colon2, [:const, :Javascript], :Translator],
                                                    :load_file,
                                                    [:arglist,
@@ -54,7 +54,7 @@ class Javascript::Translator::SexpProcessorTest < ActiveSupport::TestCase
   end
 
   test "arglist containing a call" do
-    p = Javascript::Translator::SexpProcessor.new [:arglist,
+    p = RubyJS::Translator::SexpProcessor.new [:arglist,
                                                     [:call,
                                                      [:const, :File],
                                                      :join,
@@ -68,7 +68,7 @@ class Javascript::Translator::SexpProcessorTest < ActiveSupport::TestCase
   end
 
   test "call class method with 1 argument" do
-    p = Javascript::Translator::SexpProcessor.new [:call,
+    p = RubyJS::Translator::SexpProcessor.new [:call,
                                                    [:const, :File],
                                                    :join,
                                                    [:arglist,
@@ -78,8 +78,8 @@ class Javascript::Translator::SexpProcessorTest < ActiveSupport::TestCase
     assert_equal 'File.join(document.JAVASCRIPT_MODELS_PATH, "test/support/mock")', p.to_javascript
   end
 
-  test "produces a javascript class with one function call in one function" do
-    p = Javascript::Translator::SexpProcessor.new([:class, :MyKlass, nil,
+  test "produces a ruby_js class with one function call in one function" do
+    p = RubyJS::Translator::SexpProcessor.new([:class, :MyKlass, nil,
                                                    [:scope,
                                                     [:defn, :say_hello, [:args], [:scope,
                                                       [:block,
@@ -90,8 +90,8 @@ class Javascript::Translator::SexpProcessorTest < ActiveSupport::TestCase
                  p.to_javascript
   end
 
-  test "produces a javascript class with two function calls in one function" do
-    p = Javascript::Translator::SexpProcessor.new([:class, :MyKlass, nil,
+  test "produces a ruby_js class with two function calls in one function" do
+    p = RubyJS::Translator::SexpProcessor.new([:class, :MyKlass, nil,
                                                    [:scope,
                                                     [:defn, :say_hello, [:args], [:scope,
                                                      [:block,
@@ -105,8 +105,8 @@ class Javascript::Translator::SexpProcessorTest < ActiveSupport::TestCase
                  p.to_javascript
   end
 
-  test "produces a javascript class with one function calls in each of two functions" do
-    p = Javascript::Translator::SexpProcessor.new([:class, :MyKlass, nil,
+  test "produces a ruby_js class with one function calls in each of two functions" do
+    p = RubyJS::Translator::SexpProcessor.new([:class, :MyKlass, nil,
                                                    [:scope,
                                                     [:block,
                                                      [:defn, :say_hello, [:args],

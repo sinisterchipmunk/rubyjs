@@ -1,4 +1,4 @@
-class Javascript::Unpacker
+class RubyJS::Javascript::Unpacker
   def initialize(string)
     @string = string
   end

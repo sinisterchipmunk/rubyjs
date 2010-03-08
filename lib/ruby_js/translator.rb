@@ -1,7 +1,8 @@
-class Javascript::Translator
+class RubyJS::Translator
   class_inheritable_array :load_paths
   read_inheritable_attribute(:load_paths) || write_inheritable_attribute(:load_paths,
-    [File.join(Rails.root, "lib/javascript/classes")])
+    [File.join((defined?(Rails) ? Rails.root : '.'), "lib/javascript/classes"),
+     File.join(RubyJS.path, "javascript/classes")])
 
   def initialize(klass_or_filename)
     klass = klass_from_klass_or_filename(klass_or_filename)
@@ -13,7 +14,7 @@ class Javascript::Translator
   end
 
   def translate
-    @translation ||= Javascript::Translator::SexpProcessor.new(@sexp).to_javascript
+    @translation ||= RubyJS::Translator::SexpProcessor.new(@sexp).to_javascript
   end
 
   private
@@ -37,10 +38,14 @@ class Javascript::Translator
     end
 
     def load_files(load_path, *filenames)
-      add_load_path load_path
+      expanded_load_path = File.expand_path(load_path)
+      #raise "Path doesn't exist: #{expanded_load_path}" unless File.exist?(expanded_load_path)
+      add_load_path expanded_load_path
       filenames.each do |fi|
-        fi = File.join(load_path, fi) unless File.file?(fi)
-        class_name = fi.sub(/^#{Regexp::escape load_path}(\/|)(.*)(\.rb)$/, '\2').camelize
+        fi = File.join(expanded_load_path, fi) unless File.file?(fi)
+        fi = File.expand_path(fi)
+        
+        class_name = fi.sub(/^#{Regexp::escape expanded_load_path}(\/|)(.*)(\.rb)$/, '\2').camelize
         klass = class_name.constantize
         loaded[klass] = RubyParser.new.parse(File.read(fi), fi).to_a
       end

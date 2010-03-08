@@ -2,10 +2,10 @@ require 'test_helper'
 
 class EmptyClassTest < ActiveSupport::TestCase
   def setup
-    Javascript::Translator.load_file(File.join(RubyJS.test_path, "support/mock"), "empty_class.rb")
-    Javascript::Translator.load_file(File.join(RubyJS.test_path, "unit/mock"), "empty_class_test.rb")
-    @class_translator = Javascript::Translator(EmptyClass)
-    @test_translator = Javascript::Translator(EmptyClassTest)
+    RubyJS::Translator.load_file(File.join(RubyJS.test_path, "support/mock"), "empty_class.rb")
+    RubyJS::Translator.load_file(File.join(RubyJS.test_path, "unit/mock"), "empty_class_test.rb")
+    @class_translator = RubyJS::Translator(EmptyClass)
+    @test_translator = RubyJS::Translator(EmptyClassTest)
   end
 
   test "produces a Ruby class" do
@@ -22,7 +22,7 @@ class EmptyClassTest < ActiveSupport::TestCase
     $DEBUG = true
     r = @test_translator.to_s
     File.open(fi = File.join(File.dirname(__FILE__), "../../output/empty_class_test.js"), "w") do |f, b|
-      f.puts Javascript::Unpacker.new(r)
+      f.puts RubyJS::Javascript::Unpacker.new(r)
     end
     puts r
     puts

@@ -1,9 +1,9 @@
 require 'test_helper'
 
-class JavascriptModel::HelpersTest < ActiveSupport::TestCase
-  include JavascriptModel::Helpers
+class RubyJS::Javascript::HelpersTest < ActiveSupport::TestCase
+  include RubyJS::Javascript::Helpers
 
-  test "produces a valid call to a javascript method" do
+  test "produces a valid call to a ruby_js method" do
     assert_equal 'alert("Hi, "+name+"!")', js_call(:alert, 'Hi, #{name}!')
   end
 

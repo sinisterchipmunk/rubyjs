@@ -1,4 +1,4 @@
-class Javascript::Function
+class RubyJS::Javascript::Function
   attr_reader :options, :args, :body
   
   def initialize(*args, &block)

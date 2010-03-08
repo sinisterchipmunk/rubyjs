@@ -1,7 +1,7 @@
-require_dependency "action_view/helpers/javascript_helper"
-
-module JavascriptModel::Helpers
-  include ActionView::Helpers::JavaScriptHelper
+module RubyJS::Javascript::Helpers
+  def self.included(base)
+    base.send(:include, ActionView::Helpers)
+  end
   
   def js_call(name, *args)
     function = "#{name}("

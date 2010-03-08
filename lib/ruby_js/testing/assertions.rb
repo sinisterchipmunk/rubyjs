@@ -1,4 +1,4 @@
-module Javascript::Assertions
+module RubyJS::Testing::Assertions
   def assert_length(len, obj, message="Expected to find #{len} elements, found #{obj.inspect}")
     assert_equal len, obj.length, message
   end
