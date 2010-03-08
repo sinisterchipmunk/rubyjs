@@ -14,4 +14,15 @@ module RubyJS::Javascript::Helpers
     # 'hi, #{name}!' => '"hi, "+name+"!"'
     string.inspect.gsub(/\\\#\{([^\}]+)\}/m) { |match| "\"+#{$~[1]}+\"" }
   end
+
+  def create_scope
+    if self.kind_of?(RubyJS::Javascript::Scope)
+      scope = RubyJS::Javascript::Scope.new(self)
+    else
+      scope = RubyJS::Javascript::Scope.new
+    end
+    
+    yield scope if block_given?
+    scope
+  end
 end

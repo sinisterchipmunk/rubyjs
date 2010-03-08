@@ -14,4 +14,20 @@ describe RubyJS::Javascript::Helpers do
       end
     end
   end
+
+  context "#create_scope" do
+    context "without block argument" do
+      it "should return the RubyJS::Javascript::Scope" do
+        create_scope.should be_kind_of(RubyJS::Javascript::Scope)
+      end
+    end
+
+    context "with block argument" do
+      it "should be passed the RubyJS::Javascript::Scope" do
+        create_scope do |scope|
+          scope.should be_kind_of(RubyJS::Javascript::Scope)
+        end
+      end
+    end
+  end
 end

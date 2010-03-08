@@ -23,12 +23,10 @@ class RubyJS::Javascript::Class
 
   def define_method(name, *args, &block)
     methods_hash[name] = if @superklass
-      nil
-      #RubyJS::Javascript::Function.new(*args, &block)
+      RubyJS::Javascript::Function.new(*args, &block)
     else
       options = args.extract_options!
-      nil
-      #RubyJS::Javascript::Function.new(*(args + [options.merge(:super => false)]), &block)
+      RubyJS::Javascript::Function.new(*(args + [options.merge(:super => false)]), &block)
     end
   end
 
