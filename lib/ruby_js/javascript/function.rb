@@ -4,8 +4,8 @@ class RubyJS::Javascript::Function
   def initialize(*args, &block)
     generate_options_for(args)
     @scope = RubyJS::Javascript::Scope.new(self)
-    process_body(*args, &block) if block_given?
     @args = create_args(*args)
+    process_body(*args, &block) if block_given?
   end
 
   def to_javascript
@@ -14,6 +14,8 @@ class RubyJS::Javascript::Function
     function.concat "(#{args.join(", ")}) #{@scope.to_javascript}"
     function
   end
+
+  def to_json(*a); to_javascript; end
 
   private
   def create_args(*args)
@@ -43,9 +45,9 @@ class RubyJS::Javascript::Function
     arg_count = block.arity
     raise ArgumentError, "Negative arity not yet supported" if arg_count < -1
 
-    for i in (args.length+1)..arg_count
+    for i in (self.args.length+1)..arg_count
       argname = "arg#{i}"
-      args << argname
+      self.args << argname
     end
 
     @scope.process(&block)

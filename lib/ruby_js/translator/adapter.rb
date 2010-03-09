@@ -1,5 +1,3 @@
-require_dependency 'test/unit/assertions'
-
 class RubyJS::Translator::Adapter
   include Test::Unit::Assertions
   include RubyJS::Testing::Assertions

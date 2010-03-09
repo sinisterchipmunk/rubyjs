@@ -16,7 +16,7 @@ class RubyJS::JavascriptModel
   private
   def add_methods
     @js_class.define_method :initialize do
-
+    
     end
   end
 end
